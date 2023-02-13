@@ -39,7 +39,7 @@ public class Ghost : MonoBehaviour
     void Update()
     {
         States();
-        Debug.Log("Ghost State: "+_state);
+       // Debug.Log("Ghost State: "+_state);
 
     }
 
@@ -97,7 +97,7 @@ public class Ghost : MonoBehaviour
 
                 StressAura();
 
-                Debug.Log(_state);
+                //Debug.Log(_state);
 
                 break;
 
@@ -145,7 +145,7 @@ public class Ghost : MonoBehaviour
 
     void Chase()
     {
-        Debug.Log(Vector2.Distance(transform.position, girl.transform.position));
+
         if (Vector2.Distance(transform.position, girl.transform.position) < 7.5)
         {
             

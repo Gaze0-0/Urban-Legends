@@ -13,4 +13,6 @@ public class Trap : MonoBehaviour
     public type _type;
 
 
+
+
 }

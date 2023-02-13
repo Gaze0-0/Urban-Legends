@@ -9,8 +9,10 @@ public class Player : MonoBehaviour
 {
     [SerializeField] bool isControlled;
     [SerializeField] bool isHealed;
+    [SerializeField] bool isTrapActive;
     [SerializeField] bool canMove;
     [SerializeField] bool canHide;
+    [SerializeField] bool canTrap;
     [SerializeField] bool canCollect;
     [SerializeField] bool grounded;
     [SerializeField] bool xMoving;
@@ -21,9 +23,11 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpHeight = 4;
     [SerializeField] public float Stress = 100; 
     [SerializeField] float deathCountdown = 120; 
+    [SerializeField] float trapCountdown = 4; 
     
 
     [SerializeField] GameObject triggerTarget;
+    [SerializeField] public GameObject girlImage;
 
     Vector2 velocity;
 
@@ -57,7 +61,7 @@ public class Player : MonoBehaviour
         AnimationControler();
         HealthCheck();
         StressTracker();
-        Debug.Log("Payer State: "+_state);
+        //Debug.Log("Payer State: "+_state);
 
     }
 
@@ -117,6 +121,7 @@ public class Player : MonoBehaviour
                     {
                         _state = state.walk; 
                         xMoving = true;
+                        
                     }
                     else
                     {
@@ -205,6 +210,15 @@ public class Player : MonoBehaviour
                 }
             }
 
+            //this is for traps
+            if (value != 0)
+            {
+                if (canTrap)
+                {
+                    Trapeffect();
+                }
+            }
+
            
         }
     }
@@ -251,7 +265,15 @@ public class Player : MonoBehaviour
                 break;
 
             case state.walk:
-
+                if (velocity.x > 0)
+                {
+                    transform.localScale = new Vector2(4, transform.localScale.y);
+                }
+                else if (velocity.x < 0)
+                {
+                    transform.localScale = new Vector2(-4, transform.localScale.y);
+                }
+                Debug.Log(velocity.x);
                 break;
 
             case state.run:
@@ -324,6 +346,11 @@ public class Player : MonoBehaviour
             triggerTarget = collision.gameObject;
             canCollect = true;
         }
+        if (collision.tag == "Trap")
+        {
+            triggerTarget = collision.gameObject;
+            canTrap = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -339,10 +366,45 @@ public class Player : MonoBehaviour
             canCollect = false;
             triggerTarget = null;
         }
+        if (collision.tag == "Trap")
+        {
+            triggerTarget = null;
+            canTrap = false;
+        }
     }
 
 
-
+    void Trapeffect()
+    {
+        if (isTrapActive)
+        {
+            Debug.Log("0");
+            if (trapCountdown > 0)
+            {
+                canMove = false;
+                switch (triggerTarget.GetComponent<Trap>()._type)
+                {
+                    case Trap.type.Hangman:
+                        Debug.Log("1");
+                        break;
+                    case Trap.type.Toilet:
+                        Debug.Log("2");
+                        //play ghost animation here
+                        //play suffication animation here
+                        break;
+                    case Trap.type.Mirror:
+                        Debug.Log("3");
+                        break;
+                }
+            }
+            else if (trapCountdown <= 0)
+            {
+                isTrapActive = false;
+                trapCountdown = 4;
+                canMove = true;
+            }
+        }
+    }
 
 
 }

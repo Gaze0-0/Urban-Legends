@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hide
   - Collectables
+  - Trap
   layers:
   - Default
   - TransparentFX

@@ -245,6 +245,7 @@ MonoBehaviour:
   Stress: 100
   deathCountdown: 120
   triggerTarget: {fileID: 0}
+  girlImage: {fileID: 2722997197336786136}
   _state: 0
 --- !u!50 &5559943199699834291
 Rigidbody2D:
