@@ -7,31 +7,33 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] bool isControlled;
-    [SerializeField] bool isHealed;
-    [SerializeField] bool isTrapActive;
-    [SerializeField] bool canMove;
-    [SerializeField] bool canHide;
-    [SerializeField] bool canTrap;
-    [SerializeField] bool canCollect;
-    [SerializeField] bool grounded;
-    [SerializeField] bool xMoving;
+    [SerializeField] public bool isControlled;
+    [SerializeField] public bool isHealed;
+    [SerializeField] public bool isTrapActive;
+    [SerializeField] public bool canMove;
+    [SerializeField] public bool canHide;
+    [SerializeField] public bool canTrap;
+    [SerializeField] public bool useTrap = false;
+    [SerializeField] public bool canCollect;
+    [SerializeField] public bool grounded;
+    [SerializeField] public bool xMoving;
 
     [SerializeField]public int health = 2;
 
-    [SerializeField] float speed = 10;
-    [SerializeField] float jumpHeight = 4;
+    [SerializeField] public float speed = 10;
+    [SerializeField] public float jumpHeight = 4;
     [SerializeField] public float Stress = 100; 
-    [SerializeField] float deathCountdown = 120; 
-    [SerializeField] float trapCountdown = 4; 
+    [SerializeField] public float deathCountdown = 120; 
+    [SerializeField] public float trapCountdown = 4; 
     
 
-    [SerializeField] GameObject triggerTarget;
+    [SerializeField] public GameObject triggerTarget;
     [SerializeField] public GameObject girlImage;
+    [SerializeField] public GameObject ghost;
 
-    Vector2 velocity;
+    public Vector2 velocity;
 
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
 
 
     public enum state 
@@ -62,6 +64,12 @@ public class Player : MonoBehaviour
         HealthCheck();
         StressTracker();
         //Debug.Log("Payer State: "+_state);
+
+        if (useTrap)
+        {
+
+            Trapeffect();
+        }
 
     }
 
@@ -200,26 +208,42 @@ public class Player : MonoBehaviour
                 }
             }
 
+            
+        }
+    }
+
+    public void OnInteract(InputValue inputValue)
+    {
+        if (isControlled)
+        {
+            //gets value from input
+            float value = inputValue.Get<float>();
+
+
             //this is for the collectables
 
             if (value != 0)
             {
+
                 if (canCollect)
                 {
                     Destroy(triggerTarget.gameObject);
                 }
+
             }
 
             //this is for traps
             if (value != 0)
             {
+
                 if (canTrap)
                 {
-                    Trapeffect();
+
+                    useTrap = true;
                 }
             }
 
-           
+
         }
     }
 
@@ -273,7 +297,7 @@ public class Player : MonoBehaviour
                 {
                     transform.localScale = new Vector2(-4, transform.localScale.y);
                 }
-                Debug.Log(velocity.x);
+
                 break;
 
             case state.run:
@@ -350,6 +374,15 @@ public class Player : MonoBehaviour
         {
             triggerTarget = collision.gameObject;
             canTrap = true;
+            if (collision.GetComponent<Trap>().isTrapActive == true)
+            {
+                isTrapActive = true;
+            }
+            else
+            {
+                isTrapActive = false;
+            }
+
         }
     }
 
@@ -381,6 +414,7 @@ public class Player : MonoBehaviour
             Debug.Log("0");
             if (trapCountdown > 0)
             {
+                ghost.GetComponent<Ghost>()._state = Ghost.state.idle;
                 canMove = false;
                 switch (triggerTarget.GetComponent<Trap>()._type)
                 {
@@ -396,15 +430,27 @@ public class Player : MonoBehaviour
                         Debug.Log("3");
                         break;
                 }
+                trapCountdown = trapCountdown - Time.deltaTime;
             }
             else if (trapCountdown <= 0)
             {
-                isTrapActive = false;
+                TakeDamage();
+                ghost.GetComponent<Ghost>()._state = Ghost.state.leave;
+
                 trapCountdown = 4;
                 canMove = true;
+                isTrapActive = false;
+                useTrap = false;
             }
         }
     }
 
+    public void TakeDamage()
+    {
+        if (isControlled)
+        {
+            health--;
+        }
+    }
 
 }

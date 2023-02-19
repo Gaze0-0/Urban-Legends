@@ -1,0 +1,34 @@
+{
+    "name": "GameManager",
+    "maps": [
+        {
+            "name": "Dev",
+            "id": "3af0e634-fe3b-47d8-a4ab-e957161a3d2c",
+            "actions": [
+                {
+                    "name": "Restart",
+                    "type": "PassThrough",
+                    "id": "2bd876fa-81e0-4f9d-a51d-1ea9bc3c0cc5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "38e158eb-076e-4a60-8b13-a7745118fda3",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

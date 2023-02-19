@@ -13,6 +13,12 @@ public class Trap : MonoBehaviour
     public type _type;
 
 
+    private void Update()
+    {
+        if (isTrapActive)
+        {
 
+        }
+    }
 
 }

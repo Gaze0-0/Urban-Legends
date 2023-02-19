@@ -23,11 +23,11 @@ public class Ghost : MonoBehaviour
     [SerializeField] GameObject dog;
 
 
-    enum state
+    public enum state
     {
         chase, lerk, hunt, leave, idle, search,
     }
-    state _state;
+    public state _state;
 
 
     void Start()
@@ -107,7 +107,7 @@ public class Ghost : MonoBehaviour
                 CMovement();
                 SMovement(); // ---------------------------------------------------------temp till c movement is done=---------------------------
                 Chase();
-                Debug.Log(_state);
+                //Debug.Log(_state);
                 break;
             case state.leave:
 
