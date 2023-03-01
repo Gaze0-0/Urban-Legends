@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
         AnimationControler();
         HealthCheck();
         StressTracker();
-        //Debug.Log("Payer State: "+_state);
+        Debug.Log("Payer State: "+_state);
 
         if (useTrap)
         {
@@ -71,6 +71,23 @@ public class Player : MonoBehaviour
             Trapeffect();
         }
 
+
+        if (velocity.x != 0)
+        {
+            if (grounded)
+            {
+                _state = state.walk;
+                xMoving = true;
+
+            }
+            else
+            {
+                _state = state.jump;
+                xMoving = true;
+            }
+        }
+
+      
     }
 
     void HealthCheck()
@@ -125,17 +142,17 @@ public class Player : MonoBehaviour
                 if (value != 0)
                 {
                     velocity.x = speed * value;
-                    if (grounded)
-                    {
-                        _state = state.walk; 
-                        xMoving = true;
+                    //if (grounded)
+                    //{
+                    //    _state = state.walk; 
+                    //    xMoving = true;
                         
-                    }
-                    else
-                    {
-                        _state = state.jump;
-                        xMoving = true;
-                    }
+                    //}
+                    //else
+                    //{
+                    //    _state = state.jump;
+                    //    xMoving = true;
+                    //}
                 }
                 else
                 {
@@ -285,17 +302,17 @@ public class Player : MonoBehaviour
         switch (_state)
         {
             case state.idle:
-                GetComponent<SpriteRenderer>().sortingOrder = 5;
+                GetComponent<SpriteRenderer>().sortingOrder = 25;
                 break;
 
             case state.walk:
                 if (velocity.x > 0)
                 {
-                    transform.localScale = new Vector2(4, transform.localScale.y);
+                    transform.localScale = new Vector2(2, transform.localScale.y);
                 }
                 else if (velocity.x < 0)
                 {
-                    transform.localScale = new Vector2(-4, transform.localScale.y);
+                    transform.localScale = new Vector2(-2, transform.localScale.y);
                 }
 
                 break;
