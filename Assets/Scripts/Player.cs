@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
         AnimationControler();
         HealthCheck();
         StressTracker();
-        Debug.Log("Payer State: "+_state);
+        //Debug.Log("Payer State: "+_state);
 
         if (useTrap)
         {
@@ -72,20 +72,20 @@ public class Player : MonoBehaviour
         }
 
 
-        if (velocity.x != 0)
-        {
-            if (grounded)
-            {
-                _state = state.walk;
-                xMoving = true;
+        //if (velocity.x != 0)
+        //{
+        //    if (grounded)
+        //    {
+        //        _state = state.walk;
+        //        xMoving = true;
 
-            }
-            else
-            {
-                _state = state.jump;
-                xMoving = true;
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        _state = state.jump;
+        //        xMoving = true;
+        //    }
+        //}
 
       
     }
@@ -142,17 +142,17 @@ public class Player : MonoBehaviour
                 if (value != 0)
                 {
                     velocity.x = speed * value;
-                    //if (grounded)
-                    //{
-                    //    _state = state.walk; 
-                    //    xMoving = true;
-                        
-                    //}
-                    //else
-                    //{
-                    //    _state = state.jump;
-                    //    xMoving = true;
-                    //}
+                    if (grounded)
+                    {
+                        _state = state.walk;
+                        xMoving = true;
+
+                    }
+                    else
+                    {
+                        _state = state.jump;
+                        xMoving = true;
+                    }
                 }
                 else
                 {

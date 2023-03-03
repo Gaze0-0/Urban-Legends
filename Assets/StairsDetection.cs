@@ -4,102 +4,205 @@ using UnityEngine;
 
 public class StairsDetection : MonoBehaviour
 {
-    public List<GameObject> grounds;
-    public List<GameObject> stairs;
+    [SerializeField] public GameObject girl;
+    [SerializeField] public GameObject dog;
+    [SerializeField] public GameObject stairs;
+    [SerializeField] public GameObject linkTrigger;
+    [SerializeField] public List<GameObject> floors = new List<GameObject>();
 
-    public bool isDown;
-    public bool isUp;
-    public bool isStair;
-    public bool isGround;
+    [SerializeField] public bool isBase;
+    [SerializeField] public bool isTop;
+    [SerializeField] public bool isActive;
 
     private void Start()
     {
-
+        stairs.GetComponent<BoxCollider2D>().enabled = false;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        //To Down
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (!isActive)
         {
-            if (other.GetComponent<Player>().grounded && isDown)
+            if (isBase)
             {
-                for (int i = 0; i < grounds.Count; i++)
+                if (girl.GetComponent<Player>()._state == Player.state.jump)
                 {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), true);
+                    for (int i = 0; i < floors.Count; i++)
+                    {
+                        floors[i].GetComponent<BoxCollider2D>().enabled = false;
+                    }
+
+                    stairs.GetComponent<BoxCollider2D>().enabled = true;
+                    linkTrigger.GetComponent<StairsDetection>().isActive = true;
                 }
-                for (int i = 0; i < stairs.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), false);
-                }
+                Debug.Log("3");
             }
 
-            if (!other.GetComponent<Player>().grounded && isDown)
+            
+        }
+        
+    }
+
+
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!isActive)
+        { 
+            if (isTop)
             {
-                for (int i = 0; i < grounds.Count; i++)
+                
+                if (girl.GetComponent<Player>()._state != Player.state.jump)
                 {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), false);
-                }
-                for (int i = 0; i < stairs.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), true);
-                }
-            }
+                    Debug.Log("1");
+                    for (int i = 0; i < floors.Count; i++)
+                    {
+                        floors[i].GetComponent<BoxCollider2D>().enabled = false;
+                    }
 
-            //To Up
-
-
-            if (other.GetComponent<Player>().grounded == false && isUp)
-            {
-                for (int i = 0; i < grounds.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), true);
-                }
-                for (int i = 0; i < stairs.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), false);
-                }
-            }
-
-            if (!other.GetComponent<Player>().grounded == false && isUp)
-            {
-                for (int i = 0; i < grounds.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), false);
-                }
-                for (int i = 0; i < stairs.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), true);
-                }
-            }
-
-
-            //If Flat (Cuando no hay opción entre escaleras y ground)
-
-            if (isStair)
-            {
-                for (int i = 0; i < grounds.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), true);
-                }
-                for (int i = 0; i < stairs.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), false); //com[psoite collider 2d got removed
-                }
-            }
-
-            if (isGround)
-            {
-                for (int i = 0; i < grounds.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<CompositeCollider2D>(), false);
-                }
-                for (int i = 0; i < stairs.Count; i++)
-                {
-                    Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<CompositeCollider2D>(), true);
+                    stairs.GetComponent<BoxCollider2D>().enabled = true;
+                    linkTrigger.GetComponent<StairsDetection>().isActive = true;
                 }
             }
         }
     }
+
+
+
+
+
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+
+
+        if (isActive)
+        {
+            Debug.Log("2");
+            for (int i = 0; i < floors.Count; i++)
+            {
+
+                floors[i].GetComponent<BoxCollider2D>().enabled = true;
+            }
+
+            stairs.GetComponent<BoxCollider2D>().enabled = false;
+            isActive = false;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* public List<GameObject> grounds;
+     public List<GameObject> stairs;
+
+     public bool isDown;
+     public bool isUp;
+     public bool isStair;
+     public bool isGround;
+
+     private void Start()
+     {
+
+     }
+
+     private void OnTriggerStay2D(Collider2D other)
+     {
+         //To Down
+         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+         {
+             if (other.GetComponent<Player>().grounded && isDown)
+             {
+                 for (int i = 0; i < grounds.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), true);
+                 }
+                 for (int i = 0; i < stairs.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), false);
+                 }
+             }
+
+             if (!other.GetComponent<Player>().grounded && isDown)
+             {
+                 for (int i = 0; i < grounds.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), false);
+                 }
+                 for (int i = 0; i < stairs.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), true);
+                 }
+             }
+
+             //To Up
+
+
+             if (other.GetComponent<Player>().grounded == false && isUp)
+             {
+                 for (int i = 0; i < grounds.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), true);
+                 }
+                 for (int i = 0; i < stairs.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), false);
+                 }
+             }
+
+             if (!other.GetComponent<Player>().grounded == false && isUp)
+             {
+                 for (int i = 0; i < grounds.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), false);
+                 }
+                 for (int i = 0; i < stairs.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), true);
+                 }
+             }
+
+
+             //If Flat (Cuando no hay opción entre escaleras y ground)
+
+             if (isStair)
+             {
+                 for (int i = 0; i < grounds.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<BoxCollider2D>(), true);
+                 }
+                 for (int i = 0; i < stairs.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<BoxCollider2D>(), false); //com[psoite collider 2d got removed
+                 }
+             }
+
+             if (isGround)
+             {
+                 for (int i = 0; i < grounds.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), grounds[i].GetComponent<CompositeCollider2D>(), false);
+                 }
+                 for (int i = 0; i < stairs.Count; i++)
+                 {
+                     Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), stairs[i].GetComponent<CompositeCollider2D>(), true);
+                 }
+             }
+         }
+     }*/
 
 }
